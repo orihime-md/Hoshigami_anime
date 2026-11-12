@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>𓆈 ⛧ Hoshigami ⛧ 𓃒 Anime Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#050506; --coal:#0c0c0e; --ash:#8d8f96; --mist:#c9cbd1; --snow:#f4f5f7;
+  --glass:rgba(255,255,255,.055); --glass-hi:rgba(255,255,255,.11); --line:rgba(255,255,255,.16);
+  --display:'Cinzel','Times New Roman',serif; --body:'Zen Kaku Gothic New','Helvetica Neue',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--ink)}
+body{font-family:var(--body);color:var(--snow);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body.locked{overflow:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:1px solid var(--snow);outline-offset:3px}
+.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(18px) saturate(120%);-webkit-backdrop-filter:blur(18px) saturate(120%);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 20px 50px rgba(0,0,0,.45);border-radius:18px}
+
+/* backdrop: entrance image + 3D stars + grain */
+#bg{position:fixed;inset:0;z-index:-3;background:#000 url('watch_2.jpg') center/cover no-repeat;filter:grayscale(1) contrast(1.05) brightness(.85);transform:scale(1.06);animation:drift 40s ease-in-out infinite alternate}
+@keyframes drift{to{transform:scale(1.14) translate3d(-1.5%,1%,0)}}
+#veil{position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 50% 40%,rgba(0,0,0,0),rgba(0,0,0,.6) 85%),linear-gradient(rgba(0,0,0,.25),rgba(0,0,0,.55))}
+#gl{position:fixed;inset:0;z-index:-1;pointer-events:none}
+.grain{position:fixed;inset:-50%;z-index:60;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");animation:grain 1.2s steps(6) infinite}
+@keyframes grain{20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,3%)}80%{transform:translate(3%,1%)}}
+
+/* loader */
+#loader{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,#16161a,#020203 70%);transition:opacity 1.2s var(--ease),visibility 1.2s}
+#loader.done{opacity:0;visibility:hidden}
+.l-card{position:relative;width:min(88vw,560px);padding:clamp(34px,7vw,64px) clamp(20px,5vw,48px);text-align:center;overflow:hidden;transition:transform 1.2s var(--ease),filter 1.2s}
+#loader.done .l-card{transform:scale(1.12);filter:blur(12px)}
+.l-card::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.14) 50%,transparent 65%);transform:translateX(-120%);animation:sheen 3.4s var(--ease) infinite}
+@keyframes sheen{to{transform:translateX(120%)}}
+.l-sigils{font-size:clamp(18px,4vw,26px);letter-spacing:.5em;color:var(--mist);margin-bottom:22px;opacity:.85}
+.l-name{font-family:var(--display);font-weight:700;font-size:clamp(34px,9vw,64px);letter-spacing:.14em;color:rgba(255,255,255,.18);background:linear-gradient(90deg,rgba(255,255,255,.22) 0,#fff var(--p,0%),rgba(255,255,255,.18) var(--p,0%));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px rgba(255,255,255,.2)}
+.l-sub{margin-top:10px;font-weight:300;font-size:13px;letter-spacing:.5em;color:var(--ash);padding-left:.5em}
+.l-bar{margin:34px auto 12px;width:70%;height:1px;background:var(--line);position:relative}
+.l-bar i{position:absolute;left:0;top:-1px;height:3px;width:var(--p,0%);background:#fff;box-shadow:0 0 14px #fff;transition:width .25s linear}
+.l-pct{font-size:12px;letter-spacing:.4em;color:var(--ash);font-variant-numeric:tabular-nums}
+
+/* nav */
+nav{position:fixed;top:max(14px,env(safe-area-inset-top));left:50%;transform:translate(-50%,-140%);width:min(94vw,1100px);z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 14px 10px 22px;border-radius:999px;transition:transform 1.1s var(--ease) .5s}
+body.ready nav{transform:translate(-50%,0)}
+.brand{font-family:var(--display);font-weight:600;letter-spacing:.2em;font-size:15px;white-space:nowrap}
+.brand span{color:var(--ash);margin:0 .35em;font-size:12px}
+.links{display:flex;gap:6px}
+.links a{padding:9px 16px;border-radius:999px;font-size:13px;color:var(--mist);transition:background .3s,color .3s}
+.links a:hover{background:var(--glass-hi);color:#fff}
+.pill{padding:10px 20px;border-radius:999px;border:1px solid var(--line);background:var(--glass-hi);font-size:13px;transition:background .3s,transform .3s}
+.pill:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 20px 80px}
+.sig{font-size:clamp(18px,3.4vw,28px);letter-spacing:.6em;color:var(--mist);padding-left:.6em;opacity:0;transition:opacity 2s ease 1.6s}
+.h1{font-family:var(--display);font-weight:700;font-size:clamp(46px,13vw,168px);line-height:1;letter-spacing:.06em;margin:.18em 0 .1em;padding-left:.06em;display:flex;justify-content:center}
+.h1 span{display:inline-block;opacity:0;filter:blur(18px);transform:translateY(24px) scale(1.1);background:linear-gradient(180deg,#fff 20%,#8e9098);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+body.ready .h1 span{animation:letter 1.6s var(--ease) forwards;animation-delay:calc(.25s + var(--i)*.09s)}
+@keyframes letter{to{opacity:1;filter:blur(0);transform:none}}
+body.ready .sig,body.ready .fade{opacity:1}
+.sub{font-family:var(--display);letter-spacing:.7em;font-size:clamp(12px,2.2vw,20px);color:var(--mist);padding-left:.7em}
+.jp{margin-top:18px;font-weight:300;letter-spacing:.3em;color:var(--ash);font-size:14px}
+.fade{opacity:0;transition:opacity 1.6s ease 1.9s}
+.cta{margin-top:40px;display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:15px 30px;border-radius:999px;font-size:14px;letter-spacing:.12em;transition:transform .35s var(--ease),background .35s,box-shadow .35s}
+.btn.solid{background:var(--snow);color:#000;font-weight:500;box-shadow:0 0 40px rgba(255,255,255,.25)}
+.btn.solid:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(255,255,255,.45)}
+.btn.ghost{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.btn.ghost:hover{background:var(--glass-hi);transform:translateY(-2px)}
+.tri{width:0;height:0;border-left:9px solid currentColor;border-top:6px solid transparent;border-bottom:6px solid transparent}
+.search{margin-top:34px;width:min(92vw,560px);display:flex;align-items:center;gap:12px;padding:8px 8px 8px 22px;border-radius:999px}
+.search input{flex:1;min-width:0;background:none;border:0;outline:0;color:#fff;font:inherit;font-size:14px;letter-spacing:.04em}
+.search input::placeholder{color:var(--ash)}
+.search:focus-within{background:var(--glass-hi);border-color:rgba(255,255,255,.4)}
+.scroll{position:absolute;bottom:26px;left:50%;width:1px;height:54px;background:linear-gradient(#fff,transparent);transform-origin:top;animation:line 2.4s var(--ease) infinite}
+@keyframes line{0%{transform:scaleY(0)}60%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+
+/* sections */
+section{padding:clamp(64px,10vw,130px) 0}
+.wrap{width:min(92vw,1180px);margin:0 auto}
+h2{font-family:var(--display);font-weight:600;font-size:clamp(26px,4.4vw,46px);letter-spacing:.1em;margin-bottom:10px}
+.lede{color:var(--ash);font-size:15px;max-width:48ch;line-height:1.8;margin-bottom:34px}
+.rv{opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease),filter 1.1s var(--ease)}
+.rv.in{opacity:1;transform:none;filter:none}
+
+/* slideshow */
+.show{position:relative;height:clamp(360px,68vh,640px);border-radius:26px;overflow:hidden;border:1px solid var(--line);background:#000;box-shadow:0 40px 100px rgba(0,0,0,.7)}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease;background:#08080a center/cover no-repeat;filter:grayscale(1) contrast(1.08)}
+.slide.on{opacity:1}
+.slide.on{animation:kb 9s ease-out forwards}
+@keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.13) translate(-1%,1%)}}
+.show::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.85),transparent 55%),radial-gradient(circle,transparent 45%,rgba(0,0,0,.6));pointer-events:none}
+.cap{position:absolute;z-index:3;left:clamp(14px,3vw,34px);bottom:clamp(14px,3vw,34px);right:clamp(14px,3vw,34px);display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.cap-box{padding:20px 26px;max-width:480px;min-height:88px}
+.cap-t{font-family:var(--display);letter-spacing:.14em;font-size:clamp(15px,2.4vw,20px);margin-bottom:6px;transition:opacity .5s}
+.cap-s{color:var(--mist);font-weight:300;font-size:14px;line-height:1.6;transition:opacity .5s}
+.cap.swap .cap-t,.cap.swap .cap-s{opacity:0}
+.ctrl{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:999px}
+.ctrl button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);transition:background .3s}
+.ctrl button:hover{background:var(--glass-hi)}
+.dots{display:flex;gap:7px}
+.dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .5s var(--ease)}
+.dots i.on{width:26px;border-radius:4px;background:#fff}
+.prog{position:absolute;z-index:4;top:0;left:0;height:2px;background:#fff;width:0;box-shadow:0 0 12px #fff}
+
+/* placeholder boxes */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.card{position:relative;aspect-ratio:3/4;padding:22px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;transition:transform .6s var(--ease),border-color .6s,background .6s}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,30%),rgba(255,255,255,.2),transparent 55%);opacity:0;transition:opacity .5s}
+.card:hover{transform:translateY(-8px);border-color:rgba(255,255,255,.4)}
+.card:hover::before{opacity:1}
+.card .ph{position:absolute;top:22px;left:22px;font-size:22px;color:var(--ash)}
+.card h3{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:.12em;margin-bottom:6px;position:relative}
+.card p{color:var(--ash);font-size:13px;position:relative}
+.rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:18px}
+.row{padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.row b{font-family:var(--display);font-weight:600;letter-spacing:.12em;font-size:15px;display:block;margin-bottom:4px}
+.row small{color:var(--ash);font-size:13px}
+.row .sk{width:84px;height:8px;border-radius:4px;background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.25),rgba(255,255,255,.08));background-size:200% 100%;animation:sk 2.4s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+/* social links */
+.social{margin-top:18px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.soc{display:inline-flex;align-items:center;gap:10px;padding:11px 20px 11px 14px;border-radius:999px;font-size:13px;letter-spacing:.08em;color:var(--mist);transition:transform .35s var(--ease),background .35s,color .35s,border-color .35s}
+.soc svg{width:20px;height:20px;flex:none}
+.soc:hover{transform:translateY(-2px);background:var(--glass-hi);color:#fff;border-color:rgba(255,255,255,.4)}
+.foot-soc{margin-top:22px}
+
+/* watch page */
+#watch{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;visibility:hidden;transition:opacity .7s var(--ease),visibility .7s}
+#watch.open{opacity:1;visibility:visible}
+.w-card{position:relative;width:min(96vw,900px);max-height:calc(100svh - 32px);overflow-y:auto;padding:clamp(30px,5vw,48px) clamp(18px,4vw,42px);text-align:center;transform:translateY(30px) scale(.96);filter:blur(8px);transition:transform .9s var(--ease),filter .9s var(--ease)}
+#watch.open .w-card{transform:none;filter:none}
+.w-card .sig2{letter-spacing:.5em;color:var(--mist);font-size:18px;padding-left:.5em}
+.w-card h3{font-family:var(--display);font-weight:700;letter-spacing:.16em;font-size:clamp(24px,6vw,34px);margin:14px 0 8px}
+.w-card p{color:var(--ash);font-size:14px;line-height:1.7;margin-bottom:26px}
+.w-card label{display:block;text-align:left;font-size:11px;letter-spacing:.35em;color:var(--ash);margin:0 0 10px 6px}
+.w-in{display:flex;align-items:center;padding:6px;border-radius:999px;transition:background .3s,border-color .3s}
+.w-in:focus-within{background:var(--glass-hi);border-color:rgba(255,255,255,.45)}
+.w-in input{flex:1;min-width:0;background:none;border:0;outline:0;color:#fff;font:inherit;font-size:15px;letter-spacing:.06em;padding:12px 18px}
+.w-in input::placeholder{color:var(--ash)}
+.w-err{min-height:20px;margin:10px 0 4px;font-size:12px;letter-spacing:.08em;color:var(--mist)}
+.w-card .btn{width:100%;justify-content:center;margin-top:6px}
+.w-help{margin-top:22px;font-size:13px;color:var(--ash)}
+.w-help a{color:var(--mist);border-bottom:1px solid var(--line)}
+.w-back{position:absolute;top:16px;left:18px;padding:8px 14px;border-radius:999px;font-size:12px;letter-spacing:.14em;color:var(--mist);transition:background .3s}
+.w-back:hover{background:var(--glass-hi);color:#fff}
+.w-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left}
+.w-field{min-width:0}
+.w-field .w-in{width:100%}
+.vault-meta{margin:18px 0;color:var(--mist);font-size:13px;letter-spacing:.06em}
+.vault-videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;margin-top:18px;text-align:left}
+.vault-empty{padding:26px;border:1px dashed var(--line);border-radius:16px;color:var(--ash);font-size:13px;line-height:1.8}
+.vault-video{padding:14px;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid var(--line);min-width:0}
+.vault-video h4{font-family:var(--display);font-size:14px;letter-spacing:.08em;margin:10px 2px 5px;overflow-wrap:anywhere}
+.vault-video small{color:var(--ash);font-size:11px;letter-spacing:.05em}
+.vault-video video{width:100%;display:block;aspect-ratio:16/9;background:#000;border-radius:12px;max-height:360px}
+.vault-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.vault-actions a{flex:1;text-align:center;padding:10px 12px;border-radius:999px;border:1px solid var(--line);background:var(--glass-hi);font-size:12px;letter-spacing:.08em;min-width:110px}
+.vault-actions a:hover{background:rgba(255,255,255,.2)}
+@media(max-width:600px){.w-form-grid{grid-template-columns:1fr}.w-card{padding-top:52px}}
+.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+footer{padding:50px 0 70px;text-align:center;color:var(--ash);font-size:13px;letter-spacing:.2em;border-top:1px solid var(--line)}
+footer .brand{display:block;margin-bottom:12px;color:var(--mist)}
+@media(max-width:720px){.links{display:none}.cap-box{padding:16px 18px}.cap{flex-direction:column;align-items:stretch}.ctrl{align-self:flex-start}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}.h1 span,.sig,.fade,.rv{opacity:1!important;filter:none!important;transform:none!important}}
+</style>
+</head>
+<body class="locked">
+
+<div id="bg" aria-hidden="true"></div><div id="veil"></div><canvas id="gl" aria-hidden="true"></canvas><div class="grain"></div>
+
+<div id="loader" role="status" aria-label="Loading">
+  <div class="l-card glass">
+    <div class="l-sigils" aria-hidden="true">𓆈 ⛧ 𓃒</div>
+    <div class="l-name">Hoshigami</div>
+    <div class="l-sub">ANIME BOX</div>
+    <div class="l-bar"><i></i></div>
+    <div class="l-pct">0%</div>
+  </div>
+</div>
+
+<nav class="glass" aria-label="Main">
+  <a class="brand" href="#top">𓆈<span>⛧</span>Hoshigami<span>⛧</span>𓃒</a>
+  <div class="links"><a href="#gallery">Gallery</a><a href="#library">Library</a><a href="#lists">Lists</a></div>
+  <a class="pill" href="#watch">My vault</a>
+</nav>
+
+<main id="top">
+  <header class="hero">
+    <div class="sig" aria-hidden="true">𓆈 ⛧ 𓃒</div>
+    <h1 class="h1" aria-label="Hoshigami"></h1>
+    <div class="sub fade">ANIME BOX</div>
+    <p class="jp fade">アニメを見よう</p>
+    <div class="cta fade">
+      <a class="btn solid" href="#watch"><i class="tri"></i>Open my vault</a>
+      <a class="btn ghost" href="#gallery">Browse the gallery</a>
+    </div>
+    <form class="search glass fade" onsubmit="return false" role="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" placeholder="Search a title, a studio, a name" aria-label="Search anime">
+      <button class="pill" type="submit">Search</button>
+    </form>
+    <div class="social fade">
+      <a class="soc glass" href="https://t.me/Hoshigami_453_bot" target="_blank" rel="noopener noreferrer" aria-label="Open the Hoshigami Telegram bot">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 19.5c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.3-.1-.5-.6-.2L6.2 13 1.4 11.500c-1-.3-1-1 .2-1.500L20.400 2.700c.9-.3 1.600.2 1.500 1.600z"/></svg>
+        Telegram Bot
+      </a>
+      <a class="soc glass" href="https://whatsapp.com/channel/0029Vb9AmNA8kyySBNq8UX31" target="_blank" rel="noopener noreferrer" aria-label="Join the Hoshigami WhatsApp channel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.500 20.500l1.200-4.300A8.500 8.500 0 1 1 8 19.400z"/><path d="M9 8.500c0 3.500 3 6.500 6.500 6.500l1-1.500-2-1-.8.800c-1-.4-2-1.400-2.400-2.400l.8-.8-1-2z"/></svg>
+        WhatsApp Channel
+      </a>
+    </div>
+    <div class="scroll" aria-hidden="true"></div>
+  </header>
+
+  <section id="gallery">
+    <div class="wrap">
+      <h2 class="rv">Into the dark</h2>
+      <p class="lede rv">Cold figures, quiet light. Watch, enjoy, and be a true otaku.</p>
+      <div class="show rv" id="show" aria-roledescription="carousel">
+        <div class="prog"></div>
+        <div class="cap">
+          <div class="cap-box glass"><div class="cap-t"></div><div class="cap-s"></div></div>
+          <div class="ctrl glass"><button id="prev" aria-label="Previous slide">‹</button><div class="dots"></div><button id="next" aria-label="Next slide">›</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="library">
+    <div class="wrap">
+      <h2 class="rv">The library</h2>
+      <p class="lede rv">Your shelf, reserved. Title cards will appear here once they are added.</p>
+      <div class="grid">
+        <article class="card glass rv"><span class="ph" aria-hidden="true">𓆈</span><h3>Now watching</h3><p>Pick up where you left off.</p></article>
+        <article class="card glass rv"><span class="ph" aria-hidden="true">⛧</span><h3>Trending</h3><p>What everyone is streaming tonight.</p></article>
+        <article class="card glass rv"><span class="ph" aria-hidden="true">𓃒</span><h3>New arrivals</h3><p>Fresh episodes, added daily.</p></article>
+        <article class="card glass rv"><span class="ph" aria-hidden="true">✦</span><h3>Classics</h3><p>The series that built the genre.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="lists">
+    <div class="wrap">
+      <h2 class="rv">Your lists</h2>
+      <p class="lede rv">Save titles to watch later and keep a record of what you finished.</p>
+      <div class="rows">
+        <div class="row glass rv"><div><b>Watchlist</b><small>Nothing saved yet</small></div><span class="sk"></span></div>
+        <div class="row glass rv"><div><b>Completed</b><small>Nothing finished yet</small></div><span class="sk"></span></div>
+        <div class="row glass rv"><div><b>Party box</b><small>Start a room with friends</small></div><a class="pill" href="#top">Create</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><span class="brand">𓆈 ⛧ Hoshigami ⛧ 𓃒</span>Watch. Enjoy. Be a True Otaku.
+  <div class="social foot-soc">
+    <a class="soc glass" href="https://t.me/Hoshigami_453_bot" target="_blank" rel="noopener noreferrer">Telegram Bot</a>
+    <a class="soc glass" href="https://whatsapp.com/channel/0029Vb9AmNA8kyySBNq8UX31" target="_blank" rel="noopener noreferrer">WhatsApp Channel</a>
+  </div>
+</footer>
+
+<div id="watch" role="dialog" aria-modal="true" aria-labelledby="w-title" aria-hidden="true">
+  <div class="w-card glass">
+    <a class="w-back" href="#top">← BACK</a>
+    <div class="sig2" aria-hidden="true">𓆈 ⛧ 𓃒</div>
+    <h3 id="w-title">YOUR VIDEO VAULT</h3>
+    <p>Enter the private access ID and secure key sent in your Hoshigami bot message. Only host videos you own or are permitted to distribute. Your videos are automatically erased when the ID expires after one hour.</p>
+    <form id="w-form" novalidate>
+      <div class="w-form-grid">
+        <div class="w-field">
+          <label for="w-id">ACCESS ID</label>
+          <div class="w-in glass">
+            <input id="w-id" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="6–10 digit ID" maxlength="10" required>
+          </div>
+        </div>
+        <div class="w-field">
+          <label for="w-key">SECURE ACCESS KEY</label>
+          <div class="w-in glass">
+            <input id="w-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste the secure key" maxlength="100" required>
+          </div>
+        </div>
+      </div>
+      <div class="w-err" id="w-err" role="status" aria-live="polite"></div>
+      <button class="btn solid" type="submit"><i class="tri"></i>Open my videos</button>
+    </form>
+    <div class="vault-meta" id="vault-meta"></div>
+    <div class="vault-videos" id="vault-videos">
+      <div class="vault-empty">Your private videos will appear here after you open your vault.</div>
+    </div>
+    <div class="w-help">No access yet? <a href="https://t.me/Hoshigami_453_bot" target="_blank" rel="noopener noreferrer">Open the Hoshigami Telegram bot</a></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* split title into letters */
+  var h1 = document.querySelector('.h1');
+  'HOSHIGAMI'.split('').forEach(function(c,i){var s=document.createElement('span');s.textContent=c;s.style.setProperty('--i',i);s.setAttribute('aria-hidden','true');h1.appendChild(s)});
+
+  /* ---------- loader ---------- */
+  var loader=document.getElementById('loader'), pctEl=document.querySelector('.l-pct'), p=0;
+  var imgs=['watch_2.jpg','main_1.jpg','start_1.jpg'], loaded=0;
+  imgs.forEach(function(s){var i=new Image();i.onload=i.onerror=function(){loaded++};i.src=s});
+  function setP(v){loader.style.setProperty('--p',v+'%');loader.querySelectorAll('.l-name,.l-bar i').forEach(function(e){e.style.setProperty('--p',v+'%')});pctEl.textContent=Math.round(v)+'%'}
+  var t0=performance.now(), minMs=reduce?300:3200;
+  (function tick(){
+    var el=performance.now()-t0, target=Math.min(el/minMs,1)*100;
+    if(loaded<imgs.length) target=Math.min(target,92);
+    p+=(target-p)*.12; setP(p);
+    if(p>99.2&&loaded>=imgs.length){setP(100);finish();return}
+    requestAnimationFrame(tick);
+  })();
+  function finish(){
+    setTimeout(function(){loader.classList.add('done');document.body.classList.remove('locked');document.body.classList.add('ready');},350);
+  }
+
+  /* ---------- three.js: starfield + drifting dust ---------- */
+  var cv=document.getElementById('gl');
+  if(window.THREE){try{
+    var r=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:false});
+    r.setPixelRatio(Math.min(devicePixelRatio,1.75));
+    var sc=new THREE.Scene(), cam=new THREE.PerspectiveCamera(60,1,.1,200); cam.position.z=30;
+    function layer(n,size,spread,op){
+      var g=new THREE.BufferGeometry(), a=new Float32Array(n*3);
+      for(var i=0;i<n*3;i++)a[i]=(Math.random()-.5)*spread;
+      g.setAttribute('position',new THREE.BufferAttribute(a,3));
+      var c=document.createElement('canvas');c.width=c.height=64;var x=c.getContext('2d'),gr=x.createRadialGradient(32,32,0,32,32,32);
+      gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.3,'rgba(255,255,255,.5)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);
+      var m=new THREE.PointsMaterial({size:size,map:new THREE.CanvasTexture(c),transparent:true,opacity:op,depthWrite:false,blending:THREE.AdditiveBlending,color:0xdfe2ea});
+      var pt=new THREE.Points(g,m);sc.add(pt);return pt;
+    }
+    var far=layer(1400,.55,160,.9), near=layer(220,1.3,70,.55);
+    var mx=0,my=0,sy=0;
+    addEventListener('pointermove',function(e){mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5)},{passive:true});
+    addEventListener('scroll',function(){sy=scrollY/innerHeight},{passive:true});
+    function size(){r.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+    addEventListener('resize',size);size();
+    var clock=new THREE.Clock();
+    (function loop(){
+      var t=clock.getElapsedTime();
+      if(!reduce){far.rotation.y=t*.012;far.rotation.x=t*.004;near.rotation.y=-t*.02;near.position.y=sy*6}
+      cam.position.x+=(mx*6-cam.position.x)*.03; cam.position.y+=(-my*4-cam.position.y)*.03; cam.lookAt(0,0,0);
+      r.render(sc,cam); requestAnimationFrame(loop);
+    })();
+  }catch(e){}}
+
+  /* ---------- slideshow ---------- */
+  var data=[
+    ['main_1.jpg','The eclipse','He opens his hands, and the light bends around him.'],
+    ['start_1.jpg','Threads','Every web he spins is a story you have not seen yet.'],
+    ['main_2.jpg','Starfall','Before the first episode, there is only silence and stars.'],
+    ['start_2.jpg','The reaper','Some endings are waiting at the end of a long chain.'],
+    ['fail_1.jpg','Shadow walker','Cold as smoke. Only the eyes are still burning.'],
+    ['fail_2.jpg','Breaking point','Power gathers before the world breaks open.'],
+    ['watch_1.jpg','Party night','Gather your friends. The box is open.']
+  ];
+  var show=document.getElementById('show'), cap=show.querySelector('.cap'), capT=cap.querySelector('.cap-t'), capS=cap.querySelector('.cap-s'),
+      dots=show.querySelector('.dots'), prog=show.querySelector('.prog'), slides=[], cur=-1, timer, DUR=6500, tStart=0, raf;
+  data.forEach(function(d,i){
+    var s=document.createElement('div');s.className='slide';s.style.backgroundImage="url('"+d[0]+"')";show.insertBefore(s,prog);slides.push(s);
+    var dot=document.createElement('i');dot.setAttribute('role','button');dot.setAttribute('aria-label','Slide '+(i+1));dot.onclick=function(){go(i,true)};dots.appendChild(dot);
+  });
+  function go(n,manual){
+    n=(n+data.length)%data.length;
+    if(cur>=0){slides[cur].classList.remove('on');dots.children[cur].classList.remove('on')}
+    cap.classList.add('swap');
+    setTimeout(function(){capT.textContent=data[n][1];capS.textContent=data[n][2];cap.classList.remove('swap')},350);
+    slides[n].classList.add('on');dots.children[n].classList.add('on');cur=n;
+    clearTimeout(timer);cancelAnimationFrame(raf);tStart=performance.now();
+    if(!reduce){timer=setTimeout(function(){go(cur+1)},DUR);(function bar(){var k=Math.min((performance.now()-tStart)/DUR,1);prog.style.width=k*100+'%';if(k<1)raf=requestAnimationFrame(bar)})()}
+  }
+  document.getElementById('prev').onclick=function(){go(cur-1,true)};
+  document.getElementById('next').onclick=function(){go(cur+1,true)};
+  var sx=0;show.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});
+  show.addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>50)go(cur+(d<0?1:-1),true)});
+  go(0);
+
+  /* ---------- private video vault ---------- */
+  var wp=document.getElementById('watch'), wf=document.getElementById('w-form'),
+      wi=document.getElementById('w-id'), wk=document.getElementById('w-key'),
+      we=document.getElementById('w-err'), wc=wp.querySelector('.w-card'),
+      vm=document.getElementById('vault-meta'), vv=document.getElementById('vault-videos');
+  var lastAutoAccess='', wasWatchOpen=false;
+  function formatSize(n){return n>=1073741824?(n/1073741824).toFixed(2)+' GB':(n/1048576).toFixed(1)+' MB'}
+  function setVaultError(message){we.textContent=message||'';}
+  function renderVault(data){
+    vv.replaceChildren();
+    var videos=data.videos||[];
+    var expiry=new Date(data.expires_at*1000);
+    vm.textContent='ID '+data.id+' · '+videos.length+' video(s) · Expires '+expiry.toLocaleTimeString();
+    if(!videos.length){
+      var empty=document.createElement('div');empty.className='vault-empty';
+      empty.textContent='Your vault is active, but no videos have been added yet. Start a download in the Telegram bot and return here.';
+      vv.appendChild(empty);return;
+    }
+    videos.forEach(function(item){
+      var card=document.createElement('article');card.className='vault-video';
+      var video=document.createElement('video');video.controls=true;video.playsInline=true;video.preload='metadata';video.src=item.stream_url;video.setAttribute('referrerpolicy','no-referrer');
+      var title=document.createElement('h4');title.textContent=item.title||item.filename||'Hoshigami video';
+      var meta=document.createElement('small');meta.textContent=formatSize(item.size)+' · auto-deletes with this ID';
+      var actions=document.createElement('div');actions.className='vault-actions';
+      var stream=document.createElement('a');stream.href=item.stream_url;stream.target='_blank';stream.rel='noopener noreferrer';stream.textContent='Open video';
+      var download=document.createElement('a');download.href=item.download_url;download.textContent='Download';download.setAttribute('download','');
+      actions.append(stream,download);card.append(video,title,meta,actions);vv.appendChild(card);
+    });
+  }
+  async function loadVault(id,key){
+    setVaultError('Verifying your private access…');
+    vm.textContent='';
+    try{
+      var res=await fetch('/api/vault/access',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,key:key}),cache:'no-store'});
+      var data=await res.json().catch(function(){return {error:'The server returned an invalid response.'}});
+      if(!res.ok)throw new Error(data.error||'Could not open this vault.');
+      wi.value=id;wk.value='';renderVault(data);setVaultError('Access confirmed. Videos are private to this secure link.');
+      if(location.hash.indexOf('#vault=')===0)history.replaceState(null,'',location.pathname+location.search+'#watch');
+    }catch(err){
+      vv.replaceChildren();var empty=document.createElement('div');empty.className='vault-empty';empty.textContent=err.message||'Could not open this vault.';vv.appendChild(empty);
+      vm.textContent='';setVaultError(err.message||'Could not open this vault.');
+    }
+  }
+  async function loadCurrentVault(){
+    try{
+      var res=await fetch('/api/vault/current',{credentials:'same-origin',cache:'no-store'});
+      if(!res.ok)return;
+      var data=await res.json();renderVault(data);setVaultError('Your secure vault session is active.');
+    }catch(e){}
+  }
+  function syncWatch(){
+    var hash=location.hash;
+    var direct=hash.match(/^#vault=(\d{6,10})\.([A-Za-z0-9_-]{30,100})$/);
+    var open=hash==='#watch'||!!direct;
+    wp.classList.toggle('open',open);
+    wp.setAttribute('aria-hidden',open?'false':'true');
+    if(open){
+      document.body.classList.add('locked');
+      if(!wasWatchOpen&&!direct){setTimeout(function(){wi.focus()},500);loadCurrentVault();}
+    }else if(document.body.classList.contains('ready')){document.body.classList.remove('locked')}
+    if(direct){
+      var signature=direct[1]+'.'+direct[2];
+      if(signature!==lastAutoAccess){lastAutoAccess=signature;loadVault(direct[1],direct[2]);}
+    }
+    wasWatchOpen=open;
+  }
+  addEventListener('hashchange',syncWatch);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&wp.classList.contains('open'))location.hash='#top'});
+  wp.addEventListener('click',function(e){if(e.target===wp)location.hash='#top'});
+  wf.addEventListener('submit',function(e){
+    e.preventDefault();
+    var id=wi.value.trim(),key=wk.value.trim();
+    if(!/^\d{6,10}$/.test(id)){setVaultError('Your access ID must contain 6 to 10 digits.');wi.focus();return;}
+    if(!/^[A-Za-z0-9_-]{30,100}$/.test(key)){setVaultError('Paste the complete secure access key from your Telegram message.');wk.focus();return;}
+    loadVault(id,key);
+  });
+  setTimeout(syncWatch,60);
+  var wait=setInterval(function(){if(document.body.classList.contains('ready')){clearInterval(wait);syncWatch()}},300);
+
+  /* ---------- scroll reveal + card light ---------- */
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+  document.querySelectorAll('.rv').forEach(function(el,i){el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});
+  document.querySelectorAll('.card').forEach(function(c){c.addEventListener('pointermove',function(e){var b=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-b.left)/b.width*100+'%');c.style.setProperty('--my',(e.clientY-b.top)/b.height*100+'%')})});
+})();
+</script>
+</body>
+</html>
